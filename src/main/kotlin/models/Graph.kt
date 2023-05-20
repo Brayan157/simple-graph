@@ -1,7 +1,6 @@
 package models
 
 import java.math.BigDecimal
-import java.math.RoundingMode
 import java.math.RoundingMode.DOWN
 
 class Graph {
@@ -14,12 +13,22 @@ class Graph {
         }
     }
     fun addEdge(edge: Edge) = edges.add(edge)
-    fun getVertexDegree(vertex: Vertex) = edges.filter {
-        it.existsVertex(vertex)
-    }.size
+    fun getVertexDegree(vertex: Vertex): Int {
+        var count = 0
+        edges.forEach {
+            if (it.existsVertex(vertex)) {
+                count++
+                if (it.isLoop()) count++
+            }
+        }
+
+        return count
+    }
 
     fun getAverageDegree(): BigDecimal {
-        val degreeSum =  vertices.sumOf { getVertexDegree(it) }
+        val degreeSum =  vertices.sumOf {
+            getVertexDegree(it)
+        }
 
         return degreeSum.toBigDecimal().divide(
             vertices.size.toBigDecimal(),
