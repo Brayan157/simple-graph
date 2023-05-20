@@ -27,6 +27,30 @@ class Graph {
             DOWN
         )
     }
+    fun matrizAdjacency(): Array<IntArray> {
+        val matrix = Array(vertices.size){IntArray(vertices.size)}
+
+        val positions = mutableMapOf<Vertex, Int>()
+        for ((numero, vertex) in vertices.withIndex()){
+            positions[vertex] = numero
+        }
+        edges.forEach {
+            matrixAdjacencyEdge(matrix, positions[it.vertices.first]!!, positions[it.vertices.second]!!)
+        }
+        return matrix
+    }
+    fun matrixAdjacencyEdge(matrizAdjacency: Array<IntArray>, origin:Int, destiny:Int){
+        if (origin >=0 && origin < vertices.size && destiny>= 0 && destiny < vertices.size) {
+            if (origin == destiny){
+                matrizAdjacency[origin][destiny] += 1
+            }
+            else{
+                matrizAdjacency[origin][destiny] += 1
+                matrizAdjacency[destiny][origin] += 1
+            }
+             // se for um grafo não-direcionado
+        }
+    }
 
     fun getVertices() = vertices
 }
