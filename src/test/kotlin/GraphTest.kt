@@ -1,13 +1,14 @@
+import mock.PurposedGraphs.generateFirstPurposedGraph
 import models.Edge
 import models.Graph
 import models.Vertex
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import java.math.BigDecimal
 import java.math.MathContext
 import java.math.RoundingMode.DOWN
-import kotlin.test.assertEquals
 
 class GraphTest {
 
@@ -58,6 +59,18 @@ class GraphTest {
                 graph.getAverageDegree(),
                 BigDecimal(0.66).round(mathContext)
             )
+        }
+    }
+
+    @Nested
+    inner class ExampleGraphsTest {
+
+        @Test
+        fun `should generate an adjacency matrix of first purposed graph`() {
+            val graph = generateFirstPurposedGraph()
+
+            assertEquals(graph.getVertices().size, 4)
+            assertEquals(graph.getAverageDegree(), BigDecimal(7).divide(BigDecimal(2), 2, DOWN))
         }
     }
 }
