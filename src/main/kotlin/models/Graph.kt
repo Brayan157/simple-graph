@@ -60,7 +60,6 @@ class Graph {
              // se for um grafo não-direcionado
         }
     }
-    fun matrix
 
     fun getVertices() = vertices
 }
