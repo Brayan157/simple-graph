@@ -24,6 +24,11 @@ class GraphTest {
         }
     }
     @Nested
+    inner class MatrixAdjacency{
+        @Test
+//        fun ``
+    }
+    @Nested
     inner class DegreeTest{
         @Test
         fun `should count degree of vertex in a graph`(){
