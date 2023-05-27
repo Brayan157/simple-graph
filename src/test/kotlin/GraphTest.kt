@@ -23,11 +23,11 @@ class GraphTest {
             assertTrue(graph.getVertices().size == 1)
         }
     }
-    @Nested
-    inner class MatrixAdjacency{
-        @Test
-//        fun ``
-    }
+//    @Nested
+//    inner class MatrixAdjacency{
+//        @Test
+////        fun ``
+//    }
     @Nested
     inner class DegreeTest{
         @Test

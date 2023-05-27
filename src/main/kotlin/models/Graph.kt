@@ -57,10 +57,31 @@ class Graph {
                 matrizAdjacency[origin][destiny] += 1
                 matrizAdjacency[destiny][origin] += 1
             }
-             // se for um grafo não-direcionado
         }
     }
-    fun matrix
+    fun matrixIncidence():Array<IntArray>{
+        val matrix = Array(vertices.size){IntArray(edges.size)}
+
+        val positions = mutableMapOf<Vertex, Int>()
+        for ((numero, vertex) in vertices.withIndex()){
+            positions[vertex] = numero
+        }
+        edges.forEachIndexed { index, edge ->
+            matrixIncidenceToAdd(matrix, positions[edge.vertices.first]!!, positions[edge.vertices.second]!!, index)
+        }
+        return matrix
+
+    }
+    fun matrixIncidenceToAdd(matrizIncidence: Array<IntArray>, origin:Int, destiny:Int, column:Int){
+        if (origin == destiny){
+            matrizIncidence[origin][column] = 2
+        }
+        else{
+            matrizIncidence[origin][column] = 1
+            matrizIncidence[destiny][column] = 1
+        }
+
+    }
 
     fun getVertices() = vertices
 }
