@@ -11,7 +11,6 @@ import org.junit.jupiter.api.assertAll
 import java.math.BigDecimal
 import java.math.MathContext
 import java.math.RoundingMode.DOWN
-import org.assertj.core.api.Assertions.assertThat
 
 class GraphTest {
 
@@ -23,7 +22,7 @@ class GraphTest {
             val vertex = Vertex(name = "vertex1")
             graph.addVertex(vertex)
 
-            assertTrue(graph.getVertices().size == 1)
+            assertTrue(graph.vertices.size == 1)
         }
     }
 
@@ -83,12 +82,73 @@ class GraphTest {
             val adjacencyMatrix = graph.matrizAdjacency()
 
             assertAll (
-                { assertThat(adjacencyMatrix.size).isEqualTo(graph.getVertices().size) },
-                { assertThat(adjacencyMatrix.first().size).isEqualTo(graph.getVertices().size) },
+                { assertThat(adjacencyMatrix.size).isEqualTo(graph.vertices.size) },
+                { assertThat(adjacencyMatrix.first().size).isEqualTo(graph.vertices.size) },
                 { assertThat(adjacencyMatrix[0][0]).isEqualTo(0) },
                 { assertThat(adjacencyMatrix[1][1]).isEqualTo(0) },
                 { assertThat(adjacencyMatrix[0][1]).isEqualTo(1) },
                 { assertThat(adjacencyMatrix[1][0]).isEqualTo(1) }
+            )
+        }
+
+        @Test
+        fun `should return an adjacency matrix of a graph with a loop`() {
+            val v1 = Vertex("v1")
+            val e1 = Edge(Pair(v1, v1))
+
+            val graph = Graph()
+            graph.addVertex(v1)
+            graph.addEdge(e1)
+
+            val adjacencyMatrix = graph.matrizAdjacency()
+
+            assertAll (
+                { assertThat(adjacencyMatrix.size).isEqualTo(graph.vertices.size) },
+                { assertThat(adjacencyMatrix.first().size).isEqualTo(graph.vertices.size) },
+                { assertThat(adjacencyMatrix[0][0]).isEqualTo(1) },
+            )
+        }
+    }
+
+    @Nested
+    inner class IncidencesMatrixTests {
+
+        @Test
+        fun `should return an adjacency matrix of a graph`() {
+            val v1 = Vertex("v1")
+            val v2 = Vertex("v2")
+            val e1 = Edge(Pair(v1, v2))
+
+            val graph = Graph()
+            graph.addVertex(v1)
+            graph.addVertex(v2)
+            graph.addEdge(e1)
+
+            val incidenceMatrix = graph.matrixIncidence()
+
+            assertAll (
+                { assertThat(incidenceMatrix.size).isEqualTo(graph.vertices.size) },
+                { assertThat(incidenceMatrix.first().size).isEqualTo(graph.edges.size) },
+                { assertThat(incidenceMatrix[0][0]).isEqualTo(1) },
+                { assertThat(incidenceMatrix[1][0]).isEqualTo(1) }
+            )
+        }
+
+        @Test
+        fun `should return an adjacency matrix of a graph with a loop`() {
+            val v1 = Vertex("v1")
+            val e1 = Edge(Pair(v1, v1))
+
+            val graph = Graph()
+            graph.addVertex(v1)
+            graph.addEdge(e1)
+
+            val incidenceMatrix = graph.matrixIncidence()
+
+            assertAll (
+                { assertThat(incidenceMatrix.size).isEqualTo(graph.vertices.size) },
+                { assertThat(incidenceMatrix.first().size).isEqualTo(graph.edges.size) },
+                { assertThat(incidenceMatrix[0][0]).isEqualTo(2) }
             )
         }
     }
@@ -102,13 +162,13 @@ class GraphTest {
             val adjacencyMatrix = graph.matrizAdjacency()
 
             assertAll(
-                { assertThat(graph.getVertices().size).isEqualTo(4) },
+                { assertThat(graph.vertices.size).isEqualTo(4) },
                 {
                     assertThat(graph.getAverageDegree())
                         .isEqualTo(BigDecimal(7).divide(BigDecimal(2), 2, DOWN))
                 },
-                { assertThat(adjacencyMatrix.size).isEqualTo(graph.getVertices().size) },
-                { assertThat(adjacencyMatrix.first().size).isEqualTo(graph.getVertices().size) },
+                { assertThat(adjacencyMatrix.size).isEqualTo(graph.vertices.size) },
+                { assertThat(adjacencyMatrix.first().size).isEqualTo(graph.vertices.size) },
                 { assertThat(adjacencyMatrix[0][0]).isEqualTo(1) },
                 { assertThat(adjacencyMatrix[1][1]).isEqualTo(0) },
                 { assertThat(adjacencyMatrix[2][2]).isEqualTo(0) },
@@ -128,6 +188,51 @@ class GraphTest {
                 { assertThat(adjacencyMatrix[3][1]).isEqualTo(0) },
                 { assertThat(adjacencyMatrix[3][2]).isEqualTo(2) },
                 { assertThat(adjacencyMatrix[3][3]).isEqualTo(0) }
+            )
+        }
+
+        @Test
+        fun `should generate an incidence matrix of first purposed graph`() {
+            val graph = generateFirstPurposedGraph()
+            val incidenceMatrix = graph.matrixIncidence()
+
+            assertAll (
+                { assertThat(incidenceMatrix.size).isEqualTo(graph.vertices.size) },
+                { assertThat(incidenceMatrix.first().size).isEqualTo(graph.edges.size) },
+                {
+                    assertThat(graph.getAverageDegree())
+                        .isEqualTo(BigDecimal(7).divide(BigDecimal(2), 2, DOWN))
+                },
+                { assertThat(incidenceMatrix.size).isEqualTo(graph.vertices.size) },
+                { assertThat(incidenceMatrix.first().size).isEqualTo(graph.edges.size) },
+                { assertThat(incidenceMatrix[0][0]).isEqualTo(1) },
+                { assertThat(incidenceMatrix[0][1]).isEqualTo(1) },
+                { assertThat(incidenceMatrix[0][2]).isEqualTo(0) },
+                { assertThat(incidenceMatrix[0][3]).isEqualTo(1) },
+                { assertThat(incidenceMatrix[0][4]).isEqualTo(0) },
+                { assertThat(incidenceMatrix[0][5]).isEqualTo(0) },
+                { assertThat(incidenceMatrix[0][6]).isEqualTo(2) },
+                { assertThat(incidenceMatrix[1][0]).isEqualTo(1) },
+                { assertThat(incidenceMatrix[1][1]).isEqualTo(1) },
+                { assertThat(incidenceMatrix[1][2]).isEqualTo(1) },
+                { assertThat(incidenceMatrix[1][3]).isEqualTo(0) },
+                { assertThat(incidenceMatrix[1][4]).isEqualTo(0) },
+                { assertThat(incidenceMatrix[1][5]).isEqualTo(0) },
+                { assertThat(incidenceMatrix[1][6]).isEqualTo(0) },
+                { assertThat(incidenceMatrix[2][0]).isEqualTo(0) },
+                { assertThat(incidenceMatrix[2][1]).isEqualTo(0) },
+                { assertThat(incidenceMatrix[2][2]).isEqualTo(1) },
+                { assertThat(incidenceMatrix[2][3]).isEqualTo(0) },
+                { assertThat(incidenceMatrix[2][4]).isEqualTo(1) },
+                { assertThat(incidenceMatrix[2][5]).isEqualTo(1) },
+                { assertThat(incidenceMatrix[2][6]).isEqualTo(0) },
+                { assertThat(incidenceMatrix[3][0]).isEqualTo(0) },
+                { assertThat(incidenceMatrix[3][1]).isEqualTo(0) },
+                { assertThat(incidenceMatrix[3][2]).isEqualTo(0) },
+                { assertThat(incidenceMatrix[3][3]).isEqualTo(1) },
+                { assertThat(incidenceMatrix[3][4]).isEqualTo(1) },
+                { assertThat(incidenceMatrix[3][5]).isEqualTo(1) },
+                { assertThat(incidenceMatrix[3][6]).isEqualTo(0) }
             )
         }
     }

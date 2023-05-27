@@ -4,8 +4,8 @@ import java.math.BigDecimal
 import java.math.RoundingMode.DOWN
 
 class Graph {
-    private val vertices: MutableSet<Vertex> = mutableSetOf()
-    private val edges: MutableSet<Edge> = mutableSetOf()
+    val vertices: MutableSet<Vertex> = mutableSetOf()
+    val edges: MutableSet<Edge> = mutableSetOf()
 
     fun addVertex(vertex: Vertex) {
         if (vertices.none { it.name == vertex.name }) {
@@ -127,6 +127,4 @@ class Graph {
             listIncidence.getOrPut(destiny) { mutableListOf() }.add(edgeIndex)
         }
     }
-
-    fun getVertices() = vertices
 }
