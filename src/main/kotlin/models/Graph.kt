@@ -36,7 +36,7 @@ class Graph {
             DOWN
         )
     }
-    fun matrizAdjacency(): Array<IntArray> {
+    fun adjacencyMatrix(): Array<IntArray> {
         val matrix = Array(vertices.size){IntArray(vertices.size)}
 
         val positions = mutableMapOf<Vertex, Int>()
@@ -44,11 +44,11 @@ class Graph {
             positions[vertex] = numero
         }
         edges.forEach {
-            matrixAdjacencyEdge(matrix, positions[it.vertices.first]!!, positions[it.vertices.second]!!)
+            adjacencyMatrixEdge(matrix, positions[it.vertices.first]!!, positions[it.vertices.second]!!)
         }
         return matrix
     }
-    fun matrixAdjacencyEdge(matrizAdjacency: Array<IntArray>, origin:Int, destiny:Int){
+    private fun adjacencyMatrixEdge(matrizAdjacency: Array<IntArray>, origin:Int, destiny:Int){
         if (origin >=0 && origin < vertices.size && destiny>= 0 && destiny < vertices.size) {
             if (origin == destiny){
                 matrizAdjacency[origin][destiny] += 1
@@ -67,12 +67,12 @@ class Graph {
             positions[vertex] = numero
         }
         edges.forEachIndexed { index, edge ->
-            matrixIncidenceToAdd(matrix, positions[edge.vertices.first]!!, positions[edge.vertices.second]!!, index)
+            incidenceMatrixToAdd(matrix, positions[edge.vertices.first]!!, positions[edge.vertices.second]!!, index)
         }
         return matrix
 
     }
-    fun matrixIncidenceToAdd(matrizIncidence: Array<IntArray>, origin:Int, destiny:Int, column:Int){
+    private fun incidenceMatrixToAdd(matrizIncidence: Array<IntArray>, origin:Int, destiny:Int, column:Int){
         if (origin == destiny){
             matrizIncidence[origin][column] = 2
         }
@@ -81,8 +81,8 @@ class Graph {
             matrizIncidence[destiny][column] = 1
         }
     }
-    fun listaAdjacenci():Map<Int, MutableList<Int>>{
-        val listAdjacency = mutableMapOf<Int, MutableList<Int>>()
+    fun adjacencyList():Map<Int, MutableList<Int>>{
+        val adjacencyList = mutableMapOf<Int, MutableList<Int>>()
         val positions = mutableMapOf<Vertex, Int>()
         for ((numero, vertex) in vertices.withIndex()){
             positions[vertex] = numero
@@ -91,21 +91,21 @@ class Graph {
             val origin = positions[it.vertices.first]
             val destiny = positions[it.vertices.second]
             if (origin != null && destiny != null){
-                listAdjacencyToAdd(listAdjacency, origin, destiny)
+                adjacencyListToAdd(adjacencyList, origin, destiny)
             }
         }
-        return listAdjacency
+        return adjacencyList
     }
 
-    fun listAdjacencyToAdd(listAdjacency: MutableMap<Int, MutableList<Int>>, origin: Int, destiny: Int) {
+    private fun adjacencyListToAdd(listAdjacency: MutableMap<Int, MutableList<Int>>, origin: Int, destiny: Int) {
         listAdjacency.getOrPut(origin) { mutableListOf() }.add(destiny)
         if (origin != destiny){
             listAdjacency.getOrPut(destiny) { mutableListOf() }.add(origin)
         }
     }
 
-    fun listIncidence(): Map<Int, MutableList<Int>>{
-        val listIncidence = mutableMapOf<Int, MutableList<Int>>()
+    fun incidenceList(): Map<Int, MutableList<Int>>{
+        val incidenceList = mutableMapOf<Int, MutableList<Int>>()
         val positions = mutableMapOf<Vertex, Int>()
         for ((numero, vertex) in vertices.withIndex()){
             positions[vertex] = numero
@@ -115,16 +115,16 @@ class Graph {
             val destiny = positions[edge.vertices.second]
 
             if (origin != null && destiny != null) {
-                listIncidenceToAdd(listIncidence, origin, destiny, edgeIndex)
+                incidenceListToAdd(incidenceList, origin, destiny, edgeIndex)
             }
         }
-        return listIncidence
+        return incidenceList
     }
 
-    fun listIncidenceToAdd(listIncidence: MutableMap<Int, MutableList<Int>>, origin: Int, destiny: Int, edgeIndex: Int) {
-        listIncidence.getOrPut(origin) { mutableListOf() }.add(edgeIndex)
+    private fun incidenceListToAdd(incidenceList: MutableMap<Int, MutableList<Int>>, origin: Int, destiny: Int, edgeIndex: Int) {
+        incidenceList.getOrPut(origin) { mutableListOf() }.add(edgeIndex)
         if (origin != destiny){
-            listIncidence.getOrPut(destiny) { mutableListOf() }.add(edgeIndex)
+            incidenceList.getOrPut(destiny) { mutableListOf() }.add(edgeIndex)
         }
     }
 }
