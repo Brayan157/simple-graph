@@ -79,7 +79,7 @@ class GraphTest {
             graph.addVertex(v2)
             graph.addEdge(e1)
 
-            val adjacencyMatrix = graph.matrizAdjacency()
+            val adjacencyMatrix = graph.adjacencyMatrix()
 
             assertAll (
                 { assertThat(adjacencyMatrix.size).isEqualTo(graph.vertices.size) },
@@ -100,7 +100,7 @@ class GraphTest {
             graph.addVertex(v1)
             graph.addEdge(e1)
 
-            val adjacencyMatrix = graph.matrizAdjacency()
+            val adjacencyMatrix = graph.adjacencyMatrix()
 
             assertAll (
                 { assertThat(adjacencyMatrix.size).isEqualTo(graph.vertices.size) },
@@ -154,12 +154,44 @@ class GraphTest {
     }
 
     @Nested
-    inner class ExampleGraphsTest {
+    inner class AdjacencyListTests {
+
+        @Test
+        fun `should calculate adjacency list of graph`() {
+            val v1 = Vertex("v1")
+            val v2 = Vertex("v2")
+            val v3 = Vertex("v3")
+            val e1 = Edge(Pair(v1, v2))
+            val e2 = Edge(Pair(v2, v3))
+
+            val graph = Graph()
+            graph.addVertex(v1)
+            graph.addVertex(v2)
+            graph.addVertex(v3)
+            graph.addEdge(e1)
+            graph.addEdge(e2)
+
+            val adjacencyList = graph.adjacencyList()
+
+            assertAll(
+                { assertThat(adjacencyList[0]!!.size).isEqualTo(1) },
+                { assertThat(adjacencyList[1]!!.size).isEqualTo(2) },
+                { assertThat(adjacencyList[2]!!.size).isEqualTo(1) },
+                { assertThat(adjacencyList[0]!![0]).isEqualTo(1) },
+                { assertThat(adjacencyList[1]!![0]).isEqualTo(0) },
+                { assertThat(adjacencyList[1]!![1]).isEqualTo(2) },
+                { assertThat(adjacencyList[2]!![0]).isEqualTo(1) }
+            )
+        }
+    }
+
+    @Nested
+    inner class ExampleGraphsTests {
 
         @Test
         fun `should generate an adjacency matrix of first purposed graph`() {
             val graph = generateFirstPurposedGraph()
-            val adjacencyMatrix = graph.matrizAdjacency()
+            val adjacencyMatrix = graph.adjacencyMatrix()
 
             assertAll(
                 { assertThat(graph.vertices.size).isEqualTo(4) },
