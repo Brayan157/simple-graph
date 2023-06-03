@@ -132,7 +132,7 @@ class Graph {
         }
     }
 
-    private fun getAdjacenctVertices(currentVertex: Vertex): List<Vertex> {
+    private fun getAdjacentVertices(currentVertex: Vertex): List<Vertex> {
         val adjacenctVertices = mutableListOf<Vertex>()
         edges.forEach {
             if (currentVertex == it.vertices.first){
@@ -163,22 +163,31 @@ class Graph {
         )
         while (queueOfVertices.isNotEmpty()){
             val currentVertex = queueOfVertices.poll()
-            for (neighbor in getAdjacenctVertices(currentVertex)){
-                if (!visited[neighbor]!!){
-                    queueOfVertices.offer(neighbor)
-                    visited[neighbor] = true
-                    distance[neighbor] = distance[currentVertex]!! + 1
-                    breadthSearch[neighbor] = BreadthSearch(
-                        visited = visited[neighbor]!!,
-                        predecessor = currentVertex,
-                        distance = distance[neighbor]!!
-                    )
-                }
-
-            }
+            processBreadthSearch(currentVertex, queueOfVertices, visited, distance, breadthSearch)
         }
         return breadthSearch
     }
+    private fun processBreadthSearch(
+        currentVertex: Vertex,
+        queueOfVertices: Queue<Vertex>,
+        visited: MutableMap<Vertex, Boolean>,
+        distance: MutableMap<Vertex, Int>,
+        breadthSearch: MutableMap<Vertex, BreadthSearch>
+    ) {
+        for (neighbor in getAdjacentVertices(currentVertex)) {
+            if (!visited[neighbor]!!) {
+                queueOfVertices.offer(neighbor)
+                visited[neighbor] = true
+                distance[neighbor] = distance[currentVertex]!! + 1
+                breadthSearch[neighbor] = BreadthSearch(
+                    visited = visited[neighbor]!!,
+                    predecessor = currentVertex,
+                    distance = distance[neighbor]!!
+                )
+            }
+        }
+    }
+
 
     fun depthSearch(startVertex: Vertex): MutableMap<Vertex, DepthSearch> {
         val depthSearch = mutableMapOf<Vertex, DepthSearch>()
@@ -201,7 +210,7 @@ class Graph {
             predecessor = null
         )
 
-        for (neighbor in getAdjacenctVertices(vertex)) {
+        for (neighbor in getAdjacentVertices(vertex)) {
             if (!visited[neighbor]!!) {
                 depthSearchVisit(neighbor, visited, depthSearch)
             }
