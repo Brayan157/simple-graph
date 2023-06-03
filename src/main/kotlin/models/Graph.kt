@@ -192,27 +192,34 @@ class Graph {
     fun depthSearch(startVertex: Vertex): MutableMap<Vertex, DepthSearch> {
         val depthSearch = mutableMapOf<Vertex, DepthSearch>()
         val visited = mutableMapOf<Vertex, Boolean>()
-
+        val distance = mutableMapOf<Vertex, Int>()
         vertices.forEach {
             visited[it] = false
         }
 
-        depthSearchVisit(startVertex, visited, depthSearch)
+        depthSearchVisit(startVertex, visited, distance, depthSearch)
 
         return depthSearch
     }
 
-    private fun depthSearchVisit(vertex: Vertex, visited: MutableMap<Vertex, Boolean>, depthSearch: MutableMap<Vertex, DepthSearch>) {
+    private fun depthSearchVisit(
+        vertex: Vertex,
+        visited: MutableMap<Vertex, Boolean>,
+        distance: MutableMap<Vertex, Int>,
+        depthSearch: MutableMap<Vertex, DepthSearch>
+    ) {
         visited[vertex] = true
-
+        distance[vertex] = 0
         depthSearch[vertex] = DepthSearch(
-            visited = true,
+            visited = visited[vertex]!!,
+            distance = distance[vertex]!!,
             predecessor = null
         )
 
         for (neighbor in getAdjacentVertices(vertex)) {
             if (!visited[neighbor]!!) {
-                depthSearchVisit(neighbor, visited, depthSearch)
+                distance[neighbor] = distance[vertex]!!+1
+                depthSearchVisit(neighbor, visited, distance, depthSearch)
             }
         }
     }
