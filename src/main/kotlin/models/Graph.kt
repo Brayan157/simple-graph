@@ -2,10 +2,13 @@ package models
 
 import java.math.BigDecimal
 import java.math.RoundingMode.DOWN
+import java.util.LinkedList
+import java.util.Queue
 
 class Graph {
     val vertices: MutableSet<Vertex> = mutableSetOf()
     val edges: MutableSet<Edge> = mutableSetOf()
+    val breadthSearch: MutableSet<BreadthSearch> = mutableSetOf()
 
     fun addVertex(vertex: Vertex) {
         if (vertices.none { it.name == vertex.name }) {
@@ -124,7 +127,87 @@ class Graph {
     private fun incidenceListToAdd(incidenceList: MutableMap<Int, MutableList<Int>>, origin: Int, destiny: Int, edgeIndex: Int) {
         incidenceList.getOrPut(origin) { mutableListOf() }.add(edgeIndex)
         if (origin != destiny){
+
             incidenceList.getOrPut(destiny) { mutableListOf() }.add(edgeIndex)
         }
     }
+
+    private fun getAdjacenctVertices(currentVertex: Vertex): List<Vertex> {
+        val adjacenctVertices = mutableListOf<Vertex>()
+        edges.forEach {
+            if (currentVertex == it.vertices.first){
+                adjacenctVertices.add(it.vertices.second)
+            }else if (currentVertex == it.vertices.second){
+                adjacenctVertices.add(it.vertices.first)
+            }
+        }
+        return adjacenctVertices
+    }
+
+    fun breadthSearch(startVertex: Vertex): MutableMap<Vertex, BreadthSearch> {
+        val breadthSearch = mutableMapOf<Vertex, BreadthSearch>()
+        val queueOfVertices:Queue<Vertex> = LinkedList()
+        val visited = mutableMapOf<Vertex, Boolean>()
+        val distance = mutableMapOf<Vertex, Int>()
+        vertices.forEach {
+            visited[it] = false
+            distance[it] = Int.MAX_VALUE
+        }
+        queueOfVertices.offer(startVertex)
+        visited[startVertex] = true
+        distance[startVertex] = 0
+        breadthSearch[startVertex] = BreadthSearch(
+            visited = visited[startVertex]!!,
+            predecessor = null,
+            distance = distance[startVertex]!!
+        )
+        while (queueOfVertices.isNotEmpty()){
+            val currentVertex = queueOfVertices.poll()
+            for (neighbor in getAdjacenctVertices(currentVertex)){
+                if (!visited[neighbor]!!){
+                    queueOfVertices.offer(neighbor)
+                    visited[neighbor] = true
+                    distance[neighbor] = distance[currentVertex]!! + 1
+                    breadthSearch[neighbor] = BreadthSearch(
+                        visited = visited[neighbor]!!,
+                        predecessor = currentVertex,
+                        distance = distance[neighbor]!!
+                    )
+                }
+
+            }
+        }
+        return breadthSearch
+    }
+
+    fun depthSearch(startVertex: Vertex): MutableMap<Vertex, DepthSearch> {
+        val depthSearch = mutableMapOf<Vertex, DepthSearch>()
+        val visited = mutableMapOf<Vertex, Boolean>()
+
+        vertices.forEach {
+            visited[it] = false
+        }
+
+        depthSearchVisit(startVertex, visited, depthSearch)
+
+        return depthSearch
+    }
+
+    private fun depthSearchVisit(vertex: Vertex, visited: MutableMap<Vertex, Boolean>, depthSearch: MutableMap<Vertex, DepthSearch>) {
+        visited[vertex] = true
+
+        depthSearch[vertex] = DepthSearch(
+            visited = true,
+            predecessor = null
+        )
+
+        for (neighbor in getAdjacenctVertices(vertex)) {
+            if (!visited[neighbor]!!) {
+                depthSearchVisit(neighbor, visited, depthSearch)
+            }
+        }
+    }
+
+
+
 }
