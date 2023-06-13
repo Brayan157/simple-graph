@@ -1,4 +1,5 @@
 import mock.PurposedGraphs.generateFirstPurposedGraph
+import models.BreadthSearch
 import models.Edge
 import models.Graph
 import models.Vertex
@@ -27,11 +28,11 @@ class GraphTest {
     }
 
     @Nested
-    inner class DegreeTest{
+    inner class DegreeTest {
         @Test
-        fun `should count degree of vertex in a graph`(){
+        fun `should count degree of vertex in a graph`() {
             val graph = Graph()
-            val vertexList = listOf(Vertex(name="vertex1"), Vertex(name="vertex2"), Vertex(name = "vertex3"))
+            val vertexList = listOf(Vertex(name = "vertex1"), Vertex(name = "vertex2"), Vertex(name = "vertex3"))
             val edge = Edge(Pair(vertexList[0], vertexList[1]))
 
             vertexList.forEach {
@@ -44,10 +45,11 @@ class GraphTest {
             assertTrue(graph.getVertexDegree(vertexList[1]) == 1)
             assertTrue(graph.getVertexDegree(vertexList[2]) == 0)
         }
+
         @Test
-        fun `should calculate average degree of a graph`(){
+        fun `should calculate average degree of a graph`() {
             val graph = Graph()
-            val vertexList = listOf(Vertex(name="vertex1"), Vertex(name="vertex2"), Vertex(name = "vertex3"))
+            val vertexList = listOf(Vertex(name = "vertex1"), Vertex(name = "vertex2"), Vertex(name = "vertex3"))
             val edge = Edge(Pair(vertexList[0], vertexList[1]))
 
             vertexList.forEach {
@@ -81,7 +83,7 @@ class GraphTest {
 
             val adjacencyMatrix = graph.adjacencyMatrix()
 
-            assertAll (
+            assertAll(
                 { assertThat(adjacencyMatrix.size).isEqualTo(graph.vertices.size) },
                 { assertThat(adjacencyMatrix.first().size).isEqualTo(graph.vertices.size) },
                 { assertThat(adjacencyMatrix[0][0]).isEqualTo(0) },
@@ -102,7 +104,7 @@ class GraphTest {
 
             val adjacencyMatrix = graph.adjacencyMatrix()
 
-            assertAll (
+            assertAll(
                 { assertThat(adjacencyMatrix.size).isEqualTo(graph.vertices.size) },
                 { assertThat(adjacencyMatrix.first().size).isEqualTo(graph.vertices.size) },
                 { assertThat(adjacencyMatrix[0][0]).isEqualTo(1) },
@@ -126,7 +128,7 @@ class GraphTest {
 
             val incidenceMatrix = graph.matrixIncidence()
 
-            assertAll (
+            assertAll(
                 { assertThat(incidenceMatrix.size).isEqualTo(graph.vertices.size) },
                 { assertThat(incidenceMatrix.first().size).isEqualTo(graph.edges.size) },
                 { assertThat(incidenceMatrix[0][0]).isEqualTo(1) },
@@ -145,7 +147,7 @@ class GraphTest {
 
             val incidenceMatrix = graph.matrixIncidence()
 
-            assertAll (
+            assertAll(
                 { assertThat(incidenceMatrix.size).isEqualTo(graph.vertices.size) },
                 { assertThat(incidenceMatrix.first().size).isEqualTo(graph.edges.size) },
                 { assertThat(incidenceMatrix[0][0]).isEqualTo(2) }
@@ -228,7 +230,7 @@ class GraphTest {
             val graph = generateFirstPurposedGraph()
             val incidenceMatrix = graph.matrixIncidence()
 
-            assertAll (
+            assertAll(
                 { assertThat(incidenceMatrix.size).isEqualTo(graph.vertices.size) },
                 { assertThat(incidenceMatrix.first().size).isEqualTo(graph.edges.size) },
                 {
@@ -265,6 +267,55 @@ class GraphTest {
                 { assertThat(incidenceMatrix[3][4]).isEqualTo(1) },
                 { assertThat(incidenceMatrix[3][5]).isEqualTo(1) },
                 { assertThat(incidenceMatrix[3][6]).isEqualTo(0) }
+            )
+        }
+
+        @Test
+        fun `should realize depth search on first purposed graph`() {
+            val graph = generateFirstPurposedGraph()
+
+            val breadthSearch = graph.breadthSearch(graph.vertices.first())
+            val keys = breadthSearch.keys.toList()
+            val values = breadthSearch.values.toList()
+
+            assertAll(
+                { assertThat(breadthSearch.keys.size).isEqualTo(4) },
+                {
+                    assertThat(breadthSearch[keys[0]]).isEqualTo(
+                        BreadthSearch(
+                            visited = true,
+                            predecessor = null,
+                            distance = 0
+                        )
+                    )
+                },
+                {
+                    assertThat(breadthSearch[keys[1]]).isEqualTo(
+                        BreadthSearch(
+                            visited = true,
+                            predecessor = keys[0],
+                            distance = 1
+                        )
+                    )
+                },
+                {
+                    assertThat(breadthSearch[keys[2]]).isEqualTo(
+                        BreadthSearch(
+                            visited = true,
+                            predecessor = keys[0],
+                            distance = 1
+                        )
+                    )
+                },
+                {
+                    assertThat(breadthSearch[keys[3]]).isEqualTo(
+                        BreadthSearch(
+                            visited = true,
+                            predecessor = keys[1],
+                            distance = 2
+                        )
+                    )
+                },
             )
         }
     }
