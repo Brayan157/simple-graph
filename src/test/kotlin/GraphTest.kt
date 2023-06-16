@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
+import org.junit.jupiter.api.assertDoesNotThrow
 import java.math.BigDecimal
 import java.math.MathContext
 import java.math.RoundingMode.DOWN
@@ -276,7 +277,6 @@ class GraphTest {
 
             val breadthSearch = graph.breadthSearch(graph.vertices.first())
             val keys = breadthSearch.keys.toList()
-            val values = breadthSearch.values.toList()
 
             assertAll(
                 { assertThat(breadthSearch.keys.size).isEqualTo(4) },
@@ -317,6 +317,15 @@ class GraphTest {
                     )
                 },
             )
+        }
+
+        @Test
+        fun `Should realize depthSearch in first purposed graph`() {
+            val graph = generateFirstPurposedGraph()
+
+            assertDoesNotThrow {
+                graph.depthSearch()
+            }
         }
     }
 }
