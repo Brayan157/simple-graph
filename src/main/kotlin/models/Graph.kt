@@ -193,13 +193,16 @@ class Graph {
         val depthSearch = mutableMapOf<Vertex, DepthSearch>()
         val visited = mutableMapOf<Vertex, Boolean>()
         val distance = mutableMapOf<Vertex, Int>()
-        val tempo = 0;
+        val time = 0;
         val predecessor:Vertex? = null
         vertices.forEach {
             visited[it] = false
-            depthSearchVisit(it, visited, distance, depthSearch, tempo, predecessor)
         }
-
+        for (vertex in vertices){
+            if (!visited[vertex]!!){
+                depthSearchVisit(vertex, visited, distance, depthSearch, time, predecessor)
+            }
+        }
         return depthSearch
     }
 
@@ -208,29 +211,30 @@ class Graph {
         visited: MutableMap<Vertex, Boolean>,
         distance: MutableMap<Vertex, Int>,
         depthSearch: MutableMap<Vertex, DepthSearch>,
-        tempo:Int,
+        time:Int,
         predecessor:Vertex?
     ) {
-        var tempoDistancia = tempo + 1
+        var currentTime = time
+        currentTime++
         visited[currentVertex] = true
-        distance[currentVertex] = tempo+1
+        distance[currentVertex] = currentTime
         for (neighbor in getAdjacentVertices(currentVertex)) {
             if (!visited[neighbor]!!){
                 depthSearch[neighbor] = DepthSearch(
                     visited = null,
                     predecessor = currentVertex,
-                    distance = null,
+                    time = null,
                     finalDistance = null
                 )
-                depthSearchVisit(currentVertex, visited, distance, depthSearch, tempo, predecessor)
+                depthSearchVisit(neighbor, visited, distance, depthSearch, currentTime, predecessor)
             }
         }
-        tempoDistancia += 1
+        currentTime++
         depthSearch[currentVertex] = DepthSearch(
             visited = visited[currentVertex],
             predecessor = predecessor,
-            distance = distance[currentVertex],
-            finalDistance = tempoDistancia
+            time = distance[currentVertex],
+            finalDistance = currentTime
         )
 
     }
