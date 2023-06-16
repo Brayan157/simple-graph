@@ -204,7 +204,7 @@ class Graph {
 
     private fun depthSearchVisit(
         vertex: Vertex,
-        predecessor:Vertex?,
+        predecessor: Vertex?,
         visited: MutableMap<Vertex, Boolean>,
         distance: MutableMap<Vertex, Int>,
         depthSearch: MutableMap<Vertex, DepthSearch>
@@ -219,12 +219,8 @@ class Graph {
         for (neighbor in getAdjacentVertices(vertex)) {
             if (!visited[neighbor]!!) {
                 distance[neighbor] = distance[vertex]!!+1
-                predecessor = vertex
-                depthSearchVisit(neighbor, predecessor, visited, distance, depthSearch)
+                depthSearchVisit(neighbor, vertex, visited, distance, depthSearch)
             }
         }
     }
-
-
-
 }
