@@ -1,8 +1,9 @@
 package models
 
 data class DepthSearch(
-    val visited: Boolean,
-    val predecessor: Vertex?,
-    val distance: Int
+    var visited: Boolean?,
+    var predecessor: Vertex?,
+    var distance: Int?,
+    var finalDistance: Int?
 )
 

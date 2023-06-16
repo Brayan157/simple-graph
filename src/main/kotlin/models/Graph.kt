@@ -189,38 +189,49 @@ class Graph {
     }
 
 
-    fun depthSearch(startVertex: Vertex): MutableMap<Vertex, DepthSearch> {
+    fun depthSearch(): MutableMap<Vertex, DepthSearch> {
         val depthSearch = mutableMapOf<Vertex, DepthSearch>()
         val visited = mutableMapOf<Vertex, Boolean>()
         val distance = mutableMapOf<Vertex, Int>()
+        val tempo = 0;
+        val predecessor:Vertex? = null
         vertices.forEach {
             visited[it] = false
+            depthSearchVisit(it, visited, distance, depthSearch, tempo, predecessor)
         }
-        val predecessor:Vertex? = null
-        depthSearchVisit(startVertex, predecessor, visited, distance, depthSearch)
 
         return depthSearch
     }
 
     private fun depthSearchVisit(
-        vertex: Vertex,
-        predecessor: Vertex?,
+        currentVertex:Vertex,
         visited: MutableMap<Vertex, Boolean>,
         distance: MutableMap<Vertex, Int>,
-        depthSearch: MutableMap<Vertex, DepthSearch>
+        depthSearch: MutableMap<Vertex, DepthSearch>,
+        tempo:Int,
+        predecessor:Vertex?
     ) {
-        visited[vertex] = true
-        depthSearch[vertex] = DepthSearch(
-            visited = visited[vertex]!!,
-            distance = distance[vertex]!!,
-            predecessor = predecessor
-        )
-
-        for (neighbor in getAdjacentVertices(vertex)) {
-            if (!visited[neighbor]!!) {
-                distance[neighbor] = distance[vertex]!!+1
-                depthSearchVisit(neighbor, vertex, visited, distance, depthSearch)
+        var tempoDistancia = tempo + 1
+        visited[currentVertex] = true
+        distance[currentVertex] = tempo+1
+        for (neighbor in getAdjacentVertices(currentVertex)) {
+            if (!visited[neighbor]!!){
+                depthSearch[neighbor] = DepthSearch(
+                    visited = null,
+                    predecessor = currentVertex,
+                    distance = null,
+                    finalDistance = null
+                )
+                depthSearchVisit(currentVertex, visited, distance, depthSearch, tempo, predecessor)
             }
         }
+        tempoDistancia += 1
+        depthSearch[currentVertex] = DepthSearch(
+            visited = visited[currentVertex],
+            predecessor = predecessor,
+            distance = distance[currentVertex],
+            finalDistance = tempoDistancia
+        )
+
     }
 }
