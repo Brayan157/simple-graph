@@ -226,7 +226,7 @@ class Graph {
                     time = null,
                     finalDistance = null
                 )
-                depthSearchVisit(neighbor, visited, distance, depthSearch, currentTime, predecessor)
+                depthSearchVisit(neighbor, visited, distance, depthSearch, currentTime, currentVertex)
             }
         }
         currentTime++
