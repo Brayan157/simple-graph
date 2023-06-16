@@ -1,3 +1,4 @@
+import mock.Purposed2Graphs.generateFirstPurposed2Graph
 import mock.PurposedGraphs.generateFirstPurposedGraph
 import models.BreadthSearch
 import models.DepthSearch
@@ -322,14 +323,16 @@ class GraphTest {
 
         @Test
         fun `Should realize depthSearch in first purposed graph`() {
-            val graph = generateFirstPurposedGraph()
-            val search = graph.depthSearch()
+            val graph = generateFirstPurposed2Graph()
+            val search = graph.depthSearch(Vertex("u"))
             assertAll(
-                { assertThat(search.size).isEqualTo(4) },
-                { assertThat(search[Vertex("v1")]).isEqualTo(DepthSearch(true, null, 1, 2)) },
-                { assertThat(search[Vertex("v2")]).isEqualTo(DepthSearch(true, null, 2, 3)) },
-                { assertThat(search[Vertex("v3")]).isEqualTo(DepthSearch(true, null, 3, 4)) },
-                { assertThat(search[Vertex("v4")]).isEqualTo(DepthSearch(true, null, 4, 5)) },
+                { assertThat(search.size).isEqualTo(6) },
+                { assertThat(search[Vertex("u")]).isEqualTo(DepthSearch(true, null, 1, 3)) },
+                { assertThat(search[Vertex("v")]).isEqualTo(DepthSearch(true, null, 1, 3)) },
+                { assertThat(search[Vertex("w")]).isEqualTo(DepthSearch(true, null, 1, 3)) },
+                { assertThat(search[Vertex("x")]).isEqualTo(DepthSearch(true, null, 1, 3)) },
+                { assertThat(search[Vertex("y")]).isEqualTo(DepthSearch(true, null, 1, 3)) },
+                { assertThat(search[Vertex("z")]).isEqualTo(DepthSearch(true, null, 1, 3)) }
             )
         }
     }
